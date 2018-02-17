@@ -17,6 +17,7 @@ obj-$(CONFIG_IR_XMP_DECODER) += ir-xmp-decoder.o
 obj-$(CONFIG_IR_DUMP_DECODER) += ir-dump-decoder.o
 obj-$(CONFIG_IR_GPIO) += gpio-ir.o
 obj-$(CONFIG_IR_PWM) += pwm-ir.o
+obj-$(CONFIG_SPI_PEELIR) += peelir.o
 # stand-alone IR receivers/transmitters
 obj-$(CONFIG_RC_ATI_REMOTE) += ati_remote.o
 obj-$(CONFIG_IR_HIX5HD2) += ir-hix5hd2.o
