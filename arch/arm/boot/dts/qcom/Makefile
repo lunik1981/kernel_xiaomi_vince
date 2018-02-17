@@ -167,7 +167,8 @@ dtb-$(CONFIG_ARCH_MDM9650) += mdm9650-sim.dtb \
 	mdm9650-v1.1-nand-ccard-v2.dtb \
 	mdm9650-v1.1-emmc-pcie-ep-mtp.dtb \
 	mdm9650-v1.1-nand-pcie-ep-mtp.dtb \
-	mdm9650-v1.1-nand-cv2x.dtb
+	mdm9650-v1.1-nand-cv2x.dtb \
+	mdm9650-v1.1-nand-rome-sdio-mtp.dtb
 
 dtb-$(CONFIG_ARCH_SDX20) += sdx20-emmc-cdp.dtb \
 	sdx20-emmc-mtp.dtb \
@@ -252,7 +253,7 @@ dtb-$(CONFIG_ARCH_MSM8940) += msm8940-pmi8937-cdp.dtb \
 	msm8940-pmi8940-qrd-sku7.dtb
 
 ifeq ($(CONFIG_MACH_XIAOMI_MSM8953),y)
-dtb-$(CONFIG_MACH_XIAOMI_MIDO) += msm8953-qrd-sku3.dtb
+dtb-$(CONFIG_MACH_XIAOMI_VINCE) += msm8953-qrd-sku3-e7.dtb
 else
 dtb-$(CONFIG_ARCH_MSM8953) += msm8953-sim.dtb \
 	msm8953-rumi.dtb \
@@ -278,6 +279,7 @@ dtb-$(CONFIG_ARCH_MSM8953) += msm8953-sim.dtb \
 	msm8953-pmi8937-mtp.dtb \
 	msm8953-pmi8940-ext-codec-mtp.dtb \
 	msm8953-pmi8937-ext-codec-mtp.dtb
+endif
 
 dtb-$(CONFIG_ARCH_SDM450) += sdm450-rcm.dtb \
 	sdm450-cdp.dtb \
