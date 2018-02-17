@@ -237,10 +237,10 @@ enum fg_mem_data_index {
 
 static struct fg_mem_setting settings[FG_MEM_SETTING_MAX] = {
 	/*       ID                    Address, Offset, Value*/
-	SETTING(SOFT_COLD,       0x454,   0,      100),
-	SETTING(SOFT_HOT,        0x454,   1,      400),
-	SETTING(HARD_COLD,       0x454,   2,      50),
-	SETTING(HARD_HOT,        0x454,   3,      450),
+	SETTING(SOFT_COLD,       0x454,   0,      150),
+	SETTING(SOFT_HOT,        0x454,   1,      450),
+	SETTING(HARD_COLD,       0x454,   2,      0),
+	SETTING(HARD_HOT,        0x454,   3,      550),
 	SETTING(RESUME_SOC,      0x45C,   1,      0),
 	SETTING(BCL_LM_THRESHOLD, 0x47C,   2,      50),
 	SETTING(BCL_MH_THRESHOLD, 0x47C,   3,      752),
@@ -2024,6 +2024,8 @@ static void fg_handle_battery_insertion(struct fg_chip *chip)
 	cancel_delayed_work(&chip->update_sram_data);
 	schedule_delayed_work(&chip->update_sram_data, msecs_to_jiffies(0));
 }
+
+
 
 
 static void batt_to_setpoint_adc(int vbatt_mv, u8 *data)
@@ -4030,8 +4032,8 @@ static void status_change_work(struct work_struct *work)
 
 	if (chip->status == POWER_SUPPLY_STATUS_FULL) {
 		if (capacity >= 99 && chip->hold_soc_while_full
-				&& chip->health == POWER_SUPPLY_HEALTH_GOOD) {
-			if (fg_debug_mask & FG_STATUS)
+				&& (chip->health == POWER_SUPPLY_HEALTH_GOOD || chip->health == POWER_SUPPLY_HEALTH_COOL)) {
+if (fg_debug_mask & FG_STATUS)
 				pr_info("holding soc at 100\n");
 			chip->charge_full = true;
 		} else if (fg_debug_mask & FG_STATUS) {
@@ -4444,7 +4446,7 @@ static bool fg_validate_battery_info(struct fg_chip *chip)
 	int i, delta_pct, batt_id_kohm, batt_temp, batt_volt_mv, batt_soc;
 
 	for (i = 1; i < BATT_INFO_MAX; i++) {
-		if (fg_debug_mask & FG_STATUS)
+
 			pr_info("batt_info[%d]: %d\n", i, chip->batt_info[i]);
 
 		if ((chip->batt_info[i] == 0 && i != BATT_INFO_TEMP) ||
@@ -4486,6 +4488,8 @@ static bool fg_validate_battery_info(struct fg_chip *chip)
 	if (batt_soc != 0 && batt_soc != FULL_SOC_RAW)
 		batt_soc = DIV_ROUND_CLOSEST((batt_soc - 1) *
 				(FULL_CAPACITY - 2), FULL_SOC_RAW - 2) + 1;
+	if (batt_soc == FULL_SOC_RAW)
+		chip->batt_info[BATT_INFO_SOC] = 100;
 
 	if (*chip->batt_range_ocv && chip->batt_max_voltage_uv > 1000)
 		delta_pct =  DIV_ROUND_CLOSEST(abs(batt_volt_mv -
@@ -8038,7 +8042,8 @@ static int fg_common_hw_init(struct fg_chip *chip)
 		}
 	}
 
-	rc = fg_mem_masked_write(chip, settings[FG_MEM_DELTA_SOC].address, 0xFF, 1,
+	rc = fg_mem_masked_write(chip, settings[FG_MEM_DELTA_SOC].address, 0xFF,
+			1,
 			settings[FG_MEM_DELTA_SOC].offset);
 	if (rc) {
 		pr_err("failed to write delta soc rc=%d\n", rc);
