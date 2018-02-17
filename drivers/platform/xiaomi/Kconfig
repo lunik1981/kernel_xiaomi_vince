@@ -8,10 +8,10 @@ config MACH_XIAOMI_MSM8953
 
 menu "Xiaomi board selection"
 
-config MACH_XIAOMI_MIDO
-	bool "Mido board"
+config MACH_XIAOMI_VINCE
+	bool "vince board"
 	select MACH_XIAOMI_MSM8953
 	help
-	  Support for Redmi Note 4 SD Mido
+	  Support for Redmi Note 5/Redmi 5 Plus vince
 
 endmenu
